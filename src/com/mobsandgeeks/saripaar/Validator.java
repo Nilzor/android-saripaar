@@ -335,6 +335,11 @@ public class Validator {
         }
     }
 
+    List<ViewRulePair> getViewsAndRules() {
+        ensureAnnotationsIsProcessed();
+        return mViewsAndRules;
+    }
+
     /**
      * Validates all rules added to this Validator.
      *
@@ -342,10 +347,7 @@ public class Validator {
      *          {@code ViewRulePair}.
      */
     private ViewRulePair validateAllRules() {
-        if (!mAnnotationsProcessed) {
-            createRulesFromAnnotations(getSaripaarAnnotatedFields());
-            mAnnotationsProcessed = true;
-        }
+        ensureAnnotationsIsProcessed();
 
         if (mViewsAndRules.size() == 0) {
             Log.i(TAG, "No rules found. Passing validation by default.");
@@ -368,6 +370,13 @@ public class Validator {
         }
 
         return failedViewRulePair;
+    }
+
+    private void ensureAnnotationsIsProcessed() {
+        if (!mAnnotationsProcessed) {
+            createRulesFromAnnotations(getSaripaarAnnotatedFields());
+            mAnnotationsProcessed = true;
+        }
     }
 
     private void createRulesFromAnnotations(List<AnnotationFieldPair> annotationFieldPairs) {
@@ -531,7 +540,7 @@ public class Validator {
                 annotationType.equals(TextRule.class);
     }
 
-    private class ViewRulePair {
+    class ViewRulePair {
         public View view;
         public Rule rule;
 
